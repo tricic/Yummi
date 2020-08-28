@@ -13,6 +13,6 @@ class Item extends Model
 
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(ItemParent::class);
+        return $this->belongsTo(ItemParent::class, null, null, 'item_parent');
     }
 }
