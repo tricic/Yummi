@@ -2,8 +2,6 @@
 @import url('https://fonts.googleapis.com/css?family=Nunito');
 @import url('https://fonts.googleapis.com/css?family=Lobster');
 
-// Variables
-@import 'variables';
-
-// Custom style
-@import 'style'
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Lobster', sans-serif;
+}
