@@ -13,24 +13,7 @@
 
                     <div class="card-body">
                         @foreach ($category->item_parents as $itemParent)
-                            <div class="menu-item row mb-3">
-                                <div class="col-3">
-                                    <img width="140" src="{{ $itemParent->image }}" alt="Pizza">
-                                </div>
-
-                                <div class="col">
-                                    <h3 class="mb-0">{{ $itemParent->name }}</h3>
-                                    <p class="mb-2">{{ $itemParent->description }}</p>
-
-                                    <div class="text-right">
-                                        @foreach ($itemParent->items as $item)
-                                            <button onclick="cart.addItem({{$item->id}})" class="btn btn-sm btn-primary ml-2">
-                                                {{ $item->size }} <b>{{ $item->price }}</b>
-                                            </button>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
+                            <x-menu-item :itemParent="$itemParent" />
 
                             @unless ($loop->last)
                                 <hr>
