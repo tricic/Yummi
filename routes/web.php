@@ -16,4 +16,5 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
-Route::get('/', 'HomeController@index')->name('home');
+Route::get('/', 'MenuController@index')->name('home');
+Route::get('/menu', 'MenuController@index')->name('menu');
