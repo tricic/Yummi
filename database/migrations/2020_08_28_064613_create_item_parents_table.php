@@ -16,6 +16,7 @@ class CreateItemParentsTable extends Migration
         Schema::create('item_parents', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->unsignedBigInteger('category_id')->nullable();
             $table->string('name');
