@@ -1,4 +1,17 @@
-@import url(https://fonts.googleapis.com/css?family=Nunito);@import url(https://fonts.googleapis.com/css?family=Lobster);h1,
+@import url(https://fonts.googleapis.com/css?family=Nunito);@import url(https://fonts.googleapis.com/css?family=Lobster);#cart input {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+#cart .cart-item-name {
+  line-height: normal;
+}
+
+#cart .cart-item-quantity {
+  margin-top: 6px;
+}
+
+h1,
 h2,
 h3,
 h4,

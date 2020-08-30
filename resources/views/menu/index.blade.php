@@ -28,7 +28,7 @@
     {{-- Cart --}}
     <div class="col-4">
         <div style="position: -webkit-sticky; position: sticky; top: 10px;">
-            {{-- <x-cart /> --}}
+            <x-cart />
         </div>
     </div>
 </div>
