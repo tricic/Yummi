@@ -10,12 +10,25 @@ class Item extends Model
 {
     use SoftDeletes;
 
+    protected $appends = [
+        'name'
+    ];
+
     protected $fillable = [
         'item_parent_id', 'size', 'price'
+    ];
+
+    protected $with = [
+        'parent'
     ];
 
     public function parent(): BelongsTo
     {
         return $this->belongsTo(ItemParent::class, null, null, 'item_parent');
+    }
+
+    public function getNameAttribute(): string
+    {
+        return $this->parent->name;
     }
 }
