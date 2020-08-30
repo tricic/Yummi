@@ -15,4 +15,9 @@ class Category extends Model
     {
         return $this->hasMany(ItemParent::class);
     }
+
+    public function isEmpty(): bool
+    {
+        return $this->item_parents->isEmpty();
+    }
 }
