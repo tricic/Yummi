@@ -18,3 +18,4 @@ Auth::routes();
 
 Route::get('/', 'MenuController@index')->name('home');
 Route::get('/menu', 'MenuController@index')->name('menu');
+Route::post('/checkout', 'OrderController@checkout')->name('checkout');
