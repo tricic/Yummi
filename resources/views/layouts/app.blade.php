@@ -78,13 +78,9 @@
         </nav>
     </header>
 
-    @if (session('status'))
-        <div class="alert alert-success" role="alert">
-            {{ session('status') }}
-        </div>
-    @endif
+    <x-alerts class="container my-4" />
 
-    <main class="container py-4">
+    <main class="container my-4">
         @yield('content')
     </main>
 
