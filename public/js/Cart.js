@@ -17,7 +17,7 @@ class Cart
         this.Q_ITEM_REMOVE = ".cart-item-remove";
         this.Q_DELIVERY_FEE = '.cart-delivery-fee';
         this.Q_TOTAL_PRICE = '.cart-total-price';
-        this.Q_CHECKOUT_BUTTON = '.cart-item-checkout-button';
+        this.Q_CHECKOUT_BUTTON = '.cart-checkout-button';
     }
 
     loadData()
@@ -176,6 +176,8 @@ class Cart
 
             this.$items.append($newItem);
         }
+
+        this.$checkoutButton.prop('disabled', false);
     }
 
     empty()

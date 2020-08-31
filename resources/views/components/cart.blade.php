@@ -38,7 +38,7 @@
     <div class="card-footer">
         @csrf
         <input type="hidden" id="data-input" name="data">
-        <button type="submit" onclick="$('#data-input').val(JSON.stringify(cart.data))" class="cart-checkout-button btn btn-primary form-control">Checkout</button>
+        <button disabled type="submit" onclick="$('#data-input').val(JSON.stringify(cart.data))" class="cart-checkout-button btn btn-primary form-control">Checkout</button>
     </div>
 </form>
 
