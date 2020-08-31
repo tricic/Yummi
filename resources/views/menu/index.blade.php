@@ -4,6 +4,10 @@
 <div id="menu" class="row">
     {{-- Menu --}}
     <div class="col-8">
+        <form action="{{ route('menu.search') }}" method="GET" class="mb-3">
+            <input type="text" name="q" class="form-control" placeholder="Search menu items...">
+        </form>
+
         @foreach ($categories as $category)
             @unless ($category->isEmpty())
                 <div class="card mb-4">

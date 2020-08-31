@@ -17,7 +17,9 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::get('/', 'MenuController@index')->name('home');
+
 Route::get('/menu', 'MenuController@index')->name('menu');
+Route::get('/menu/search', 'MenuController@search')->name('menu.search');
 
 Route::post('/checkout', 'OrderController@checkout')->name('checkout');
 Route::get('order/history', 'OrderController@history')->name('order.history');
