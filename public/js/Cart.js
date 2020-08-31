@@ -23,8 +23,6 @@ class Cart
 
     init()
     {
-        let self = this;
-
         for (let i = 0; i < this.data.items.length; ++i)
         {
             let item = this.data.items[i];
@@ -32,15 +30,7 @@ class Cart
         }
 
         let $deliveryFee = this.$cart.find('.cart-delivery-fee');
-        let $notes = this.$cart.find(".cart-notes");
-
         $deliveryFee.text(this.deliveryFee.toFixed(2));
-        $notes.val(this.data.notes ?? '');
-
-        $notes.on('change', function () {
-            self.data.notes = $notes.val();
-            self.save();
-        });
 
         this.calculateTotalPrice();
     }
@@ -184,9 +174,7 @@ class Cart
     empty()
     {
         this.data = { items: [] };
-
         this.$cart.find('.cart-item').remove();
-        this.$cart.find('.cart-notes').val('');
 
         this.calculateTotalPrice();
         this.save()

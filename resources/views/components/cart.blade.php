@@ -32,12 +32,8 @@
 
         <div class="text-right">
             <div class="h6">Delivery fee: <span class="cart-delivery-fee">0.00</span></div>
-            <div class="h4">Total: <span class="cart-total-price">0.00</span> <span class="cart-currency">USD</span></div>
+            <div class="h4 mb-0">Total: <span class="cart-total-price">0.00</span> <span class="cart-currency">USD</span></div>
         </div>
-
-        <hr>
-
-        <textarea name="notes" rows="3" class="cart-notes form-control" placeholder="Enter your notes here..."></textarea>
     </div>
     <div class="card-footer">
         @csrf
