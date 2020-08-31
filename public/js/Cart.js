@@ -6,6 +6,7 @@ class Cart
         this.$cart = $cart;
         this.$items = $cart.find('.cart-items');
         this.$template = $cart.find('#cart-item-template');
+        this.$checkoutButton = $cart.find('.cart-checkout-button');
 
         this.load();
         this.init();
@@ -98,6 +99,8 @@ class Cart
             this.data.items.push(item);
         }
 
+        this.$checkoutButton.prop('disabled', false);
+
         this.renderItem(item);
         this.calculateTotalPrice();
         this.save();
@@ -118,6 +121,11 @@ class Cart
         else
         {
             console.log('ERR! removeItem(): Item not found.');
+        }
+
+        if (this.data.items.length == 0)
+        {
+            this.empty();
         }
     }
 
@@ -175,6 +183,7 @@ class Cart
     {
         this.data = { items: [] };
         this.$cart.find('.cart-item').remove();
+        this.$checkoutButton.prop('disabled', true);
 
         this.calculateTotalPrice();
         this.save()
