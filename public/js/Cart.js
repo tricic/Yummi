@@ -5,7 +5,7 @@ class Cart
         this.deliveryFee = parseFloat(deliveryFee);
         this.$cart = $cart;
         this.$items = $cart.find('.cart-items');
-        this.$template = $cart.find('#cart-item-template');
+        this.$template = $cart.find('.cart-item-template');
         this.$checkoutButton = $cart.find('.cart-checkout-button');
 
         this.load();

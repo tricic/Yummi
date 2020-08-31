@@ -9,7 +9,7 @@
 
     <div class="card-body">
         <div class="cart-items">
-            <template id="cart-item-template">
+            <template class="cart-item-template">
                 <div class="cart-item row mb-2">
                     <button type="button" class="cart-item-remove text-danger btn p-0">
                         <i class="fas fa-times-circle"></i>
