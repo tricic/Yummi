@@ -46,6 +46,7 @@
 <script>
 $(document).ready(function() {
     cart = new Cart($("#cart"), 1);
+    cart.setup();
 });
 </script>
 

@@ -2,41 +2,56 @@ class Cart
 {
     constructor($cart, deliveryFee)
     {
-        this.deliveryFee = parseFloat(deliveryFee);
         this.$cart = $cart;
-        this.$items = $cart.find('.cart-items');
-        this.$template = $cart.find('.cart-item-template');
-        this.$checkoutButton = $cart.find('.cart-checkout-button');
+        this.deliveryFee = parseFloat(deliveryFee);
 
-        this.load();
-        this.init();
+        this.LOCAL_STORAGE_KEY = 'cart';
+        this.ITEM_ID_PREFIX = 'cart-item-';
+        this.Q_ITEM_TEMPLATE = '.cart-item-template';
+        this.Q_ITEMS = '.cart-items';
+        this.Q_ITEM = '.cart-item';
+        this.Q_ITEM_NAME = '.cart-item-name';
+        this.Q_ITEM_SIZE = '.cart-item-size';
+        this.Q_ITEM_QUANTITY = '.cart-item-quantity';
+        this.Q_ITEM_PRICE = '.cart-item-price';
+        this.Q_ITEM_REMOVE = ".cart-item-remove";
+        this.Q_DELIVERY_FEE = '.cart-delivery-fee';
+        this.Q_TOTAL_PRICE = '.cart-total-price';
+        this.Q_CHECKOUT_BUTTON = '.cart-item-checkout-button';
     }
 
-    load()
+    loadData()
     {
-        this.data = JSON.parse(localStorage.getItem('cart')) ?? { items: [] };
+        this.data = JSON.parse(localStorage.getItem(this.LOCAL_STORAGE_KEY)) ?? { items: [] };
     }
 
-    save()
+    saveData()
     {
-        localStorage.setItem('cart', JSON.stringify(this.data));
+        localStorage.setItem(this.LOCAL_STORAGE_KEY, JSON.stringify(this.data));
     }
 
-    init()
+    setup()
     {
-        for (let i = 0; i < this.data.items.length; ++i)
-        {
-            let item = this.data.items[i];
-            this.renderItem(item);
-        }
+        this.$checkoutButton = this.$cart.find(this.Q_CHECKOUT_BUTTON);
+        this.$deliveryFee = this.$cart.find(this.Q_DELIVERY_FEE);
+        this.$items = this.$cart.find(this.Q_ITEMS);
+        this.$template = this.$cart.find(this.Q_ITEM_TEMPLATE);
+        this.$totalPrice = this.$cart.find(this.Q_TOTAL_PRICE);
 
-        let $deliveryFee = this.$cart.find('.cart-delivery-fee');
-        $deliveryFee.text(this.deliveryFee.toFixed(2));
+        this.loadData();
+
+        this.data.items.forEach(item => this.renderItem(item));
+        this.$deliveryFee.text(this.deliveryFee.toFixed(2));
 
         this.calculateTotalPrice();
     }
 
-    containsItem(item)
+    findItem(item)
+    {
+        return this.data.items.find(i => i.id == item.id) ?? false;
+    }
+
+    findItemIndex(item)
     {
         for (let i = 0; i < this.data.items.length; i++)
         {
@@ -55,15 +70,14 @@ class Cart
 
         if (quantity < 1 && overwriteQuantity)
         {
-            bootbox.confirm(`Remove ${item.name} (${item.size}) from cart?`, function(result) {
-                if (result)
+            bootbox.confirm(`Remove ${item.name} (${item.size}) from cart?`, function (shouldRemove) {
+                if (shouldRemove)
                 {
                     self.removeItem(item);
                 }
                 else
                 {
-                    let index = self.containsItem(item);
-                    let originalItem = self.data.items[index];
+                    let originalItem = self.findItem(item);
                     self.addItem(originalItem, originalItem.quantity, true);
                 }
             });
@@ -71,7 +85,7 @@ class Cart
             return;
         }
 
-        let index = this.containsItem(item);
+        let index = this.findItemIndex(item);
 
         if (index !== false)
         {
@@ -103,12 +117,12 @@ class Cart
 
         this.renderItem(item);
         this.calculateTotalPrice();
-        this.save();
+        this.saveData();
     }
 
     removeItem(item)
     {
-        let index = this.containsItem(item);
+        let index = this.findItemIndex(item);
 
         if (index !== false)
         {
@@ -116,7 +130,7 @@ class Cart
             this.$item(item).remove();
 
             this.calculateTotalPrice();
-            this.save();
+            this.saveData();
         }
         else
         {
@@ -135,29 +149,27 @@ class Cart
 
         if ($item.length)
         {
-            $item.find('.cart-item-name').text(item.name);
-            $item.find('.cart-item-size').text(item.size);
-            $item.find('.cart-item-quantity').val(item.quantity);
-            $item.find('.cart-item-price').text((item.price * item.quantity).toFixed(2));
+            $item.find(this.Q_ITEM_NAME).text(item.name);
+            $item.find(this.Q_ITEM_SIZE).text(item.size);
+            $item.find(this.Q_ITEM_QUANTITY).val(item.quantity);
+            $item.find(this.Q_ITEM_PRICE).text((item.price * item.quantity).toFixed(2));
         }
         else
         {
             let self = this;
             let $newItem = this.$template.contents().clone();
 
-            $newItem.attr('data-id', item.id);
-            $newItem.attr('id', `cart-item-${item.id}`);
+            $newItem.attr('id', this.ITEM_ID_PREFIX + item.id);
+            $newItem.find(this.Q_ITEM_NAME).text(item.name);
+            $newItem.find(this.Q_ITEM_SIZE).text(item.size);
+            $newItem.find(this.Q_ITEM_QUANTITY).val(item.quantity);
+            $newItem.find(this.Q_ITEM_PRICE).text((item.price * item.quantity).toFixed(2));
 
-            $newItem.find('.cart-item-name').text(item.name);
-            $newItem.find('.cart-item-size').text(item.size);
-            $newItem.find('.cart-item-quantity').val(item.quantity);
-            $newItem.find('.cart-item-price').text((item.price * item.quantity).toFixed(2));
-
-            $newItem.find('.cart-item-remove').on('click', function() {
+            $newItem.find(this.Q_ITEM_REMOVE).on('click', function() {
                 self.removeItem(item);
             });
 
-            $newItem.find('.cart-item-quantity').on('change', function () {
+            $newItem.find(this.Q_ITEM_QUANTITY).on('change', function () {
                 let qty = parseFloat($(this).val());
                 self.addItem(item, qty, true);
             });
@@ -166,27 +178,14 @@ class Cart
         }
     }
 
-    calculateTotalPrice()
-    {
-        let totalPrice = this.deliveryFee;
-
-        this.$cart.find('.cart-item-price').each(function () {
-            totalPrice += parseFloat($(this).text());
-        });
-
-        this.$cart.find('.cart-total-price').text(totalPrice.toFixed(2));
-
-        this.data.jsTotalPrice = totalPrice;
-    }
-
     empty()
     {
         this.data = { items: [] };
-        this.$cart.find('.cart-item').remove();
+        this.$cart.find(this.Q_ITEM).remove();
         this.$checkoutButton.prop('disabled', true);
 
         this.calculateTotalPrice();
-        this.save()
+        this.saveData()
     }
 
     isEmpty()
@@ -194,8 +193,21 @@ class Cart
         return this.data.items.length == 0;
     }
 
+    calculateTotalPrice()
+    {
+        let totalPrice = this.deliveryFee;
+
+        this.$cart.find(this.Q_ITEM_PRICE).each(function () {
+            totalPrice += parseFloat($(this).text());
+        });
+
+        this.$totalPrice.text(totalPrice.toFixed(2));
+
+        this.data.jsTotalPrice = totalPrice;
+    }
+
     $item(item)
     {
-        return this.$cart.find(`#cart-item-${item.id}`);
+        return this.$cart.find('#' + this.ITEM_ID_PREFIX + item.id);
     }
 }
