@@ -60,6 +60,26 @@ class Cart
 
     addItem(item, quantity = 1, overwriteQuantity = false)
     {
+        let self = this;
+
+        if (quantity < 1 && overwriteQuantity)
+        {
+            bootbox.confirm(`Remove ${item.name} (${item.size}) from cart?`, function(result) {
+                if (result)
+                {
+                    self.removeItem(item);
+                }
+                else
+                {
+                    let index = self.containsItem(item);
+                    let originalItem = self.data.items[index];
+                    self.addItem(originalItem, originalItem.quantity, true);
+                }
+            });
+
+            return;
+        }
+
         let index = this.containsItem(item);
 
         if (index !== false)
@@ -140,7 +160,8 @@ class Cart
             });
 
             $newItem.find('.cart-item-quantity').on('change', function () {
-                self.addItem(item, $(this).val(), true);
+                let qty = parseFloat($(this).val());
+                self.addItem(item, qty, true);
             });
 
             this.$items.append($newItem);
