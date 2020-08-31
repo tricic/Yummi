@@ -1,10 +1,10 @@
 <!-- An unexamined life is not worth living. - Socrates -->
 <div class="menu-item row">
-    <div class="col-3">
-        <img class="menu-item-image" width="140" src="{{ $itemParent->image }}" alt="Item image">
+    <div class="col-3 border-right d-none d-sm-block">
+        <img class="menu-item-image w-100" src="{{ $itemParent->image }}" alt="Item image">
     </div>
 
-    <div class="col border-left">
+    <div class="col">
         <h3 class="menu-item-name mb-0">{{ $itemParent->name }}</h3>
         <p class="menu-item-description mb-2">{{ $itemParent->description }}</p>
 
