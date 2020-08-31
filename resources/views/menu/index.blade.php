@@ -3,7 +3,7 @@
 @section('content')
 <div id="menu" class="row">
     {{-- Menu --}}
-    <div class="col-8">
+    <div class="col-lg-8 mb-3">
         <form action="{{ route('menu.search') }}" method="GET" class="mb-3">
             <input type="text" name="q" class="form-control" placeholder="Search menu items...">
         </form>
@@ -30,7 +30,7 @@
     </div>
 
     {{-- Cart --}}
-    <div class="col-4">
+    <div class="col-lg-4">
         <div style="position: -webkit-sticky; position: sticky; top: 10px;">
             <x-cart />
         </div>
