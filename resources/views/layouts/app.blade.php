@@ -27,10 +27,12 @@
 
     <x-alerts class="container my-4" />
 
-    <main class="container my-4">
+    <main class="container py-4 shadow-sm">
         @yield('content')
     </main>
 
-    @include('shared.footer')
+    <footer class="py-4 border-top">
+        @include('shared.footer')
+    </footer>
 </body>
 </html>
