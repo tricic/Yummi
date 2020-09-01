@@ -12,9 +12,6 @@
     @include('shared.head.bootstrap')
     @include('shared.head.fontawesome')
 
-    {{-- Bootbox.js --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js" integrity="sha512-8vfyGnaOX2EeMypNMptU+MwwK206Jk1I/tMQV4NkhOz+W8glENoMhGyU6n/6VgQUhQcJH8NqQgHhMtZjJJBv3A==" crossorigin="anonymous"></script>
-
     @stack('scripts')
 
     {{-- app.js --}}
