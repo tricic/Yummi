@@ -2,6 +2,10 @@
 
 @section('title', 'Checkout')
 
+@push('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/money.js/0.1.3/money.min.js" integrity="sha512-wONtKxSNySBmha5jvJFjqWxzHFI4y5bGfPCz5B1VWvUrCf9xxOvlPaiGVG5a0LSvaKYoThRofSyt10mnHGw0GA==" crossorigin="anonymous"></script>
+@endpush
+
 @section('content')
 <form class="order-checkout card" action="{{ route('order.pay') }}" method="POST">
     @csrf
@@ -19,7 +23,7 @@
             <br>
             <b>Contact:</b> {{ $order->phone }}
             <br>
-            <b>Note:</b> {{ $order->notes }}
+            <b>Notes:</b> {{ $order->notes }}
         </div>
 
         <div class="cart-data">
@@ -38,7 +42,12 @@
                         <td>{{ $orderItem->quantity }}</td>
                         <td>{{ $orderItem->item->name }}</td>
                         <td>{{$orderItem->item->size}}</td>
-                        <td class="text-right">{{ number_format($orderItem->total, 2) }}</td>
+                        <td class="text-right">
+                            <span class="price" data-usd="{{ $orderItem->total }}">
+                                {{ number_format($orderItem->total, 2) }}
+                            </span>
+                            <span class="currency">USD</span>
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -52,24 +61,63 @@
 
             <div class="text-right">
                 <div class="h6 font-weight-normal">
-                    Delivery fee: {{ number_format($order->delivery_fee, 2) }} <span class="currency">USD</span>
+                    Delivery fee:
+                    <span class="price" data-usd="{{ $order->delivery_fee }}">
+                        {{ number_format($order->delivery_fee, 2) }}
+                    </span>
+                    <span class="currency">USD</span>
                 </div>
 
                 <div class="h6 font-weight-normal">
-                    VAT ({{ $order->vat }}%): {{ number_format($order->vat_amount, 2) }} <span class="currency">USD</span>
+                    VAT ({{ $order->vat }}%):
+                    <span class="price" data-usd="{{ $order->vat_amount }}">
+                        {{ number_format($order->vat_amount, 2) }}
+                    </span>
+                    <span class="currency">USD</span>
                 </div>
 
                 <hr class="my-2">
 
-                <div class="h5">
-                    Total: {{ number_format($order->total_price, 2) }} <span class="currency">USD</span>
+                <div class="h5 mb-0">
+                    Total:
+                    <span class="price" data-usd="{{ $order->total_price }}">
+                        {{ number_format($order->total_price, 2) }}
+                    </span>
+                    <span class="currency">USD</span>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="card-footer text-right">
-        <button type="submit" class="btn btn-primary px-5">Pay & Finish</button>
+        <select name="currency" id="input-currency" class="form-control d-inline-block pr-5" style="width: auto;">
+            <option>USD</option>
+            <option>EUR</option>
+        </select>
+        <button type="submit" class="btn btn-primary px-5 ml-3">Pay order</button>
     </div>
 </form>
+<script>
+fx.base = '{{ env('BASE_CURRENCY') }}';
+fx.rates = {
+    'EUR': {{ env('USD_EUR_EXCHANGE_RATE') }}
+};
+
+$('#input-currency').on('change', function () {
+    let currency = $(this).val();
+
+    if (['USD', 'EUR'].includes(currency) == false)
+    {
+        return console.log('ERR: Unsupported currency.');
+    }
+
+    $('.price').each(function () {
+        let usd = parseFloat($(this).data('usd'));
+        let convertedPrice = fx(usd).from('USD').to(currency);
+
+        $(this).text(convertedPrice.toFixed(2));
+        $('.currency').text(currency);
+    });
+});
+</script>
 @endsection
