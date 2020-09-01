@@ -27,7 +27,7 @@
 
     <x-alerts class="container my-4" />
 
-    <main class="container py-4 shadow-sm">
+    <main class="container py-4">
         @yield('content')
     </main>
 
