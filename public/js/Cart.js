@@ -114,6 +114,7 @@ class Cart
         }
 
         this.$checkoutButton.prop('disabled', false);
+        this.$checkoutButton.removeClass('disabled');
 
         this.renderItem(item);
         this.calculateTotalPrice();
@@ -178,6 +179,7 @@ class Cart
         }
 
         this.$checkoutButton.prop('disabled', false);
+        this.$checkoutButton.removeClass('disabled');
     }
 
     empty()
@@ -185,6 +187,7 @@ class Cart
         this.data = { items: [] };
         this.$cart.find(this.Q_ITEM).remove();
         this.$checkoutButton.prop('disabled', true);
+        this.$checkoutButton.addClass('disabled');
 
         this.calculateTotalPrice();
         this.saveData()

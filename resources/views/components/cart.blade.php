@@ -1,5 +1,5 @@
 <!-- No surplus words or unnecessary actions. - Marcus Aurelius -->
-<form id="cart" class="card" action="{{ route('checkout') }}" method="POST">
+<div id="cart" class="card">
     <div class="card-header">
         <h4 class="m-0">
             Cart
@@ -14,13 +14,16 @@
                     <button type="button" class="cart-item-remove text-danger btn p-0">
                         <i class="fas fa-times-circle"></i>
                     </button>
+
                     <div class="col-3 pr-0 d-flex align-items-center">
                         <input type="number" name="" class="cart-item-quantity form-control" min="0" max="99">
                     </div>
+
                     <div class="col">
                         <div class="cart-item-name m-0 font-weight-bold">null</div>
                         <small>Size: <span class="cart-item-size">null</span></small>
                     </div>
+
                     <div class="col-3 pl-0 h6 d-flex align-items-center text-right">
                         <span class="cart-item-price d-inline pr-3">0.00</span>
                     </div>
@@ -35,12 +38,11 @@
             <div class="h4 mb-0">Total: <span class="cart-total-price">0.00</span> <span class="cart-currency">USD</span></div>
         </div>
     </div>
+
     <div class="card-footer">
-        @csrf
-        <input type="hidden" id="data-input" name="data">
-        <button disabled type="submit" onclick="$('#data-input').val(JSON.stringify(cart.data))" class="cart-checkout-button btn btn-primary form-control">Checkout</button>
+        <a href="{{ route('order.delivery') }}" class="cart-checkout-button btn btn-primary form-control disabled">Checkout</a>
     </div>
-</form>
+</div>
 
 <script src="{{ asset('js/Cart.js') }}"></script>
 <script>
@@ -49,4 +51,3 @@ $(document).ready(function() {
     cart.setup();
 });
 </script>
-
