@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\OrderCreated;
 use App\Models\Item;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -89,6 +90,8 @@ class OrderService
             $orderItemData['item_id'] = $orderItemData['item']['id'];
             $order->order_items()->create($orderItemData);
         }
+
+        event(new OrderCreated($order));
 
         return $order;
     }
