@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Search')
+
 @section('content')
 <div class="row">
     <div class="col-lg-8 mb-3">

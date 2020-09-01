@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Order failed!')
+
 @section('content')
 <div class="text-center">
     <div class="lead">

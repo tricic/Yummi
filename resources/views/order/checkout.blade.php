@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Checkout')
+
 @section('content')
 <form class="order-checkout card" action="{{ route('order.pay') }}" method="POST">
     @csrf

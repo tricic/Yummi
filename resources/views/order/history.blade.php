@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('title', 'Order history')
+
+
 @section('content')
 <div class="order-history row">
     @foreach ($orders as $order)

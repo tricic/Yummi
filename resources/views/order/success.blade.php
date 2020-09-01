@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Thank You!')
+
 @section('content')
 <div class="text-center py-5">
     <div class="lead">

@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Menu')
+
 @section('content')
 <div id="menu" class="row">
     {{-- Menu --}}
