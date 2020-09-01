@@ -20,29 +20,29 @@
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label>First name</label>
-                <input required name="first_name" type="text" class="form-control" placeholder="John">
+                <input required name="first_name" type="text" class="form-control" placeholder="John" value="{{ optional($user)->first_name }}">
             </div>
 
             <div class="form-group col-md-6">
                 <label>Last name</label>
-                <input required name="last_name" type="text" class="form-control" placeholder="Doe">
+                <input required name="last_name" type="text" class="form-control" placeholder="Doe" value="{{ optional($user)->last_name }}">
             </div>
         </div>
 
         <div class="form-group">
             <label>Address</label>
-            <input required name="address" type="text" class="form-control" placeholder="1234 Main St">
+            <input required name="address" type="text" class="form-control" placeholder="1234 Main St" value="{{ optional($user)->address }}">
         </div>
 
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label>City</label>
-                <input required name="city" type="text" class="form-control" placeholder="Springfield">
+                <input required name="city" type="text" class="form-control" placeholder="Springfield" value="{{ optional($user)->city }}">
             </div>
 
             <div class="form-group col-md-6">
                 <label>Phone</label>
-                <input required name="phone" type="text" class="form-control" placeholder="123 456 789" pattern="^(?=.*\d)[\d ]+$">
+                <input required name="phone" type="text" class="form-control" placeholder="123 456 789" pattern="^(?=.*\d)[\d ]+$" value="{{ optional($user)->phone }}">
             </div>
         </div>
 

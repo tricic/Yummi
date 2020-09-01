@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Services\OrderService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class OrderController extends Controller
 {
-    public function checkout(Request $request, OrderService $orderService)
+    public function checkout(Request $request, OrderService $orderService): View
     {
         $orderService->localMode = true;
         $orderService->handle();
@@ -22,12 +23,12 @@ class OrderController extends Controller
         ]);
     }
 
-    public function delivery()
+    public function delivery(Request $request): View
     {
-        return view('order.delivery');
+        return view('order.delivery', ['user' => $request->user()]);
     }
 
-    public function pay(Request $request)
+    public function pay(Request $request): RedirectResponse
     {
         $orderData = unserialize($request->session()->get('order'));
 
@@ -83,12 +84,12 @@ class OrderController extends Controller
         ]);
     }
 
-    public function success(Order $order)
+    public function success(Order $order): View
     {
         return view('order.success', ['order' => $order]);
     }
 
-    public function failed()
+    public function failed(): View
     {
         return view('order.failed');
     }
