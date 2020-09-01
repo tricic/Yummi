@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
+    protected $appends = ['vat_amount'];
+
     protected $fillable = [
         'user_id', 'vat', 'delivery_fee', 'total_price', 'first_name', 'last_name', 'address', 'city', 'phone', 'notes'
     ];
@@ -22,19 +24,14 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-    public function getItemsCount(): int
-    {
-        return $this->order_items->count();
-    }
-
-    public function getSubTotal(): float
-    {
-        return $this->total_price - $this->delivery_fee - $this->getVatValue();
-    }
-
-    public function getVatValue(): float
+    public function getVatAmountAttribute(): float
     {
         return $this->total_price * ($this->vat / 100);
+    }
+
+    public function itemsCount(): int
+    {
+        return $this->order_items->count();
     }
 
     public function calculateTotalPrice(bool $updateAttribute = true): float
@@ -50,6 +47,8 @@ class Order extends Model
         {
             $this->update(['total_price' => $total]);
         }
+
+        $this->total_price = $total;
 
         return $total;
     }
