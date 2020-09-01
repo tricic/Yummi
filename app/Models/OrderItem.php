@@ -9,6 +9,8 @@ class OrderItem extends Model
 {
     public $timestamps = false;
 
+    protected $appends = ['total'];
+
     protected $fillable = [
         'order_id', 'item_id', 'quantity', 'price'
     ];
@@ -21,5 +23,10 @@ class OrderItem extends Model
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
+    }
+
+    public function getTotalAttribute(): float
+    {
+        return $this->quantity * $this->price;
     }
 }
