@@ -42,7 +42,7 @@ class OrderService
         }
 
         $order = new Order();
-        $order->user_id = $this->request->user()->id;
+        $order->user_id = $this->request->user()->id ?? null;
         $order->delivery_fee = (float) env('DELIVERY_FEE');
         $order->vat = (float) env('VAT');
 
