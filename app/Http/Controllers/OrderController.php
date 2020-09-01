@@ -10,10 +10,16 @@ use Illuminate\View\View;
 
 class OrderController extends Controller
 {
-    public function checkout(Request $request, OrderService $orderService): View
+    public function checkout(Request $request, OrderService $orderService)
     {
         $orderService->localMode = true;
         $orderService->handle();
+
+        if ($orderService->errors->isNotEmpty())
+        {
+            return redirect()->route('menu')->with('danger', $orderService->errors->toArray());
+        }
+
         $order = $orderService->order;
 
         $request->session()->put('order', serialize($order->toArray()));
@@ -46,14 +52,7 @@ class OrderController extends Controller
 
         try
         {
-            $order = Order::create($orderData);
-
-            foreach ($orderData['order_items'] as $orderItemData)
-            {
-                $orderItemData['item_id'] = $orderItemData['item']['id'];
-                $order->order_items()->create($orderItemData);
-            }
-
+            $order = OrderService::createOrder($orderData);
 
             $request->session()->remove('order');
 

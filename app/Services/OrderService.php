@@ -7,6 +7,8 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
 
+use function Symfony\Component\String\b;
+
 class OrderService
 {
     public $order;
@@ -74,7 +76,20 @@ class OrderService
 
         if (!$this->localMode)
         {
-            $this->order->create();
+            $this->order = self::createOrder($order->toArray());
         }
+    }
+
+    public static function createOrder(array $orderData): Order
+    {
+        $order = Order::create($orderData);
+
+        foreach ($orderData['order_items'] as $orderItemData)
+        {
+            $orderItemData['item_id'] = $orderItemData['item']['id'];
+            $order->order_items()->create($orderItemData);
+        }
+
+        return $order;
     }
 }
