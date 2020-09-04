@@ -24,7 +24,7 @@ Test user: email: test@mail.net | password: password
 
 ## Installation
 ### Requirements
-- [PHP](https://www.php.net/) >=7.2
+- [PHP](https://www.php.net/) >=7.2.5
 - [MySQL](https://www.mysql.com/) (or other Laravel supported database)
 - [Composer](https://getcomposer.org/)
 - [npm](https://www.npmjs.com/get-npm)
