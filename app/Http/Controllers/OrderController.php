@@ -3,40 +3,39 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
-use App\Services\OrderService;
+use App\Services\OrderBuilderService as OrderBuilder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class OrderController extends Controller
 {
-    public function checkout(Request $request, OrderService $orderService)
-    {
-        $orderService->localMode = true;
-        $orderService->handle();
-
-        if ($orderService->errors->isNotEmpty())
-        {
-            return redirect()->route('menu')->with('danger', $orderService->errors->toArray());
-        }
-
-        $order = $orderService->order;
-
-        $request->session()->put('order', serialize($order->toArray()));
-
-        return view('order.checkout', [
-            'order' => $order
-        ]);
-    }
-
     public function delivery(Request $request): View
     {
         return view('order.delivery', ['user' => $request->user()]);
     }
 
-    public function pay(Request $request): RedirectResponse
+    public function checkout(Request $request, OrderBuilder $orderBuilder)
     {
-        $orderData = unserialize($request->session()->get('order'));
+        $orderBuilder->build();
+
+        if ($orderBuilder->hasErrors())
+        {
+            return back()->with('danger', $orderBuilder->errors->toArray());
+        }
+
+        $request->session()->put('order', serialize($orderBuilder->order));
+
+        return view('order.checkout', [
+            'order' => $orderBuilder->order
+        ]);
+    }
+
+    public function pay(Request $request, OrderBuilder $orderBuilder): RedirectResponse
+    {
+        $order = unserialize($request->session()->get('order'));
+
+        $orderBuilder->order = $order;
 
         // Payment logic should go here...
         // $payment->setAmount($order->total_price);
@@ -52,7 +51,7 @@ class OrderController extends Controller
 
         try
         {
-            $order = OrderService::createOrder($orderData);
+            $orderBuilder->save();
 
             $request->session()->remove('order');
 

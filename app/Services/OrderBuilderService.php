@@ -8,14 +8,12 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
 
-class OrderService
+class OrderBuilderService
 {
     public $order;
 
     public $errors;
     public $request;
-
-    public $localMode = false;
 
     public function __construct(Request $request)
     {
@@ -23,7 +21,7 @@ class OrderService
         $this->errors = collect([]);
     }
 
-    public function handle(): void
+    public function build(): void
     {
         $cart = json_decode($this->request->cart);
 
@@ -39,7 +37,7 @@ class OrderService
             return;
         }
 
-        $order = new Order();
+        $this->order = $order = new Order();
         $order->user_id = $this->request->user()->id ?? null;
         $order->delivery_fee = (float) env('DELIVERY_FEE');
         $order->vat = (float) env('VAT');
@@ -51,6 +49,8 @@ class OrderService
         $order->phone = $this->request->phone;
         $order->notes = $this->request->notes;
 
+        $this->validateDeliveryInfo();
+
         foreach ($cart->items as $itemData)
         {
             $item = Item::find($itemData->id);
@@ -61,36 +61,40 @@ class OrderService
                 break;
             }
 
-            $orderItem = new OrderItem();
-            $orderItem->item = $item;
-            $orderItem->order = $order;
-            $orderItem->quantity = $itemData->quantity;
-            $orderItem->price = $item->price;
-
-            $order->order_items->push($orderItem);
+            $order->order_items->push(new OrderItem([
+                'item_id' => $item->id,
+                'quantity' => $itemData->quantity,
+                'price' => $item->price
+            ]));
         }
 
-        $this->order = $order;
-        $this->order->calculateTotalPrice(false);
-
-        if (!$this->localMode)
-        {
-            $this->order = self::createOrder($order->toArray());
-        }
+        $order->calculateTotalPrice(false);
     }
 
-    public static function createOrder(array $orderData): Order
+    public function save(): void
     {
-        $order = Order::create($orderData);
+        $this->order->save();
 
-        foreach ($orderData['order_items'] as $orderItemData)
+        foreach ($this->order->order_items as $orderItem)
         {
-            $orderItemData['item_id'] = $orderItemData['item']['id'];
-            $order->order_items()->create($orderItemData);
+            $orderItem->order_id = $this->order->id;
+            $orderItem->save();
         }
 
-        event(new OrderCreated($order));
+        event(new OrderCreated($this->order));
+    }
 
-        return $order;
+    public function hasErrors(): bool
+    {
+        return $this->errors->isNotEmpty();
+    }
+
+    protected function validateDeliveryInfo(): void
+    {
+        if (empty($this->order->first_name)) $this->errors->push('First name must not be empty.');
+        if (empty($this->order->last_name))  $this->errors->push('Last name must not be empty.');
+        if (empty($this->order->address))    $this->errors->push('Address must not be empty.');
+        if (empty($this->order->city))       $this->errors->push('City must not be empty.');
+        if (empty($this->order->phone))      $this->errors->push('Phone number must not be empty.');
     }
 }
