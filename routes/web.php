@@ -1,29 +1,20 @@
 <?php
 
+use App\Http\Controllers\MenuController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 Auth::routes();
 
-Route::get('/', 'MenuController@index')->name('home');
+Route::get('/', [MenuController::class, 'index'])->name('home');
 
-Route::get('/menu', 'MenuController@index')->name('menu');
-Route::get('/menu/search', 'MenuController@search')->name('menu.search');
+Route::get('/menu', [MenuController::class, 'index'])->name('menu');
+Route::get('/menu/search', [MenuController::class, 'search'])->name('menu.search');
 
-Route::get('order/delivery', 'OrderController@delivery')->name('order.delivery');
-Route::post('order/checkout', 'OrderController@checkout')->name('order.checkout');
-Route::get('order/history', 'OrderController@history')->name('order.history');
-Route::post('order/pay', 'OrderController@pay')->name('order.pay');
-Route::get('order/success/{order}', 'OrderController@success')->name('order.success');
-Route::get('order/failed', 'OrderController@failed')->name('order.failed');
+Route::get('order/delivery', [OrderController::class, 'delivery'])->name('order.delivery');
+Route::post('order/checkout', [OrderController::class, 'checkout'])->name('order.checkout');
+Route::get('order/history', [OrderController::class, 'history'])->name('order.history');
+Route::post('order/pay', [OrderController::class, 'pay'])->name('order.pay');
+Route::get('order/success/{order}', [OrderController::class, 'success'])->name('order.success');
+Route::get('order/failed', [OrderController::class, 'failed'])->name('order.failed');
