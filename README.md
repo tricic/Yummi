@@ -17,14 +17,14 @@ Test user: email: test@mail.net | password: password
 - Order history (requires login)
 
 ## Technologies used
-- [Laravel 7](https://laravel.com/docs/7.x/installation)
+- [Laravel 8](https://laravel.com/docs/8.x/installation)
 - [jQuery](https://jquery.com/)
 - [Bootstrap 4](https://getbootstrap.com/)
 - More: [Fontawesome](https://fontawesome.com/), [Bootbox.js](http://bootboxjs.com/), [money.js](http://openexchangerates.github.io/money.js/)
 
 ## Installation
 ### Requirements
-- [PHP](https://www.php.net/) >=7.2.5
+- [PHP](https://www.php.net/) >=7.3.0
 - [MySQL](https://www.mysql.com/) (or other Laravel supported database)
 - [Composer](https://getcomposer.org/)
 - [npm](https://www.npmjs.com/get-npm)

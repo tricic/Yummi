@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\Category;
 use App\Models\ItemParent;
 use Illuminate\Database\Seeder;
@@ -7,13 +9,6 @@ use Illuminate\Support\Arr;
 
 class ItemSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * Note: Seeds ItemParents and Items
-     *
-     * @return void
-     */
     public function run(): void
     {
         $this->seedPizza();

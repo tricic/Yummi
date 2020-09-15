@@ -1,26 +1,33 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use App\Models\Order;
-use App\Models\OrderItem;
 use App\Models\User;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Order::class, function (Faker $faker) {
-    return [
-        'created_at' => now(),
-        'updated_at' => now(),
+class OrderFactory extends Factory
+{
+    protected $model = Order::class;
 
-        'user_id' => User::inRandomOrder()->first(),
-        'vat' => 10,
-        'delivery_fee' => 1,
+    public function definition()
+    {
+        $date = $this->faker->dateTimeBetween('-1 month');
 
-        'first_name' => $faker->firstName,
-        'last_name' => $faker->lastName,
-        'address' => $faker->address,
-        'city' => $faker->city,
-        'phone' => $faker->phoneNumber,
-        'notes' => $faker->text
-    ];
-});
+        return [
+            'created_at' => $date,
+            'updated_at' => $date,
+
+            'user_id' => $this->faker->numberBetween(1, User::count()),
+            'vat' => 10,
+            'delivery_fee' => 1,
+
+            'first_name' => $this->faker->firstName,
+            'last_name' => $this->faker->lastName,
+            'address' => $this->faker->address,
+            'city' => $this->faker->city,
+            'phone' => $this->faker->phoneNumber,
+            'notes' => $this->faker->sentence
+        ];
+    }
+}

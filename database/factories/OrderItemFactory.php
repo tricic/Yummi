@@ -1,17 +1,23 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use App\Models\Item;
 use App\Models\Order;
 use App\Models\OrderItem;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(OrderItem::class, function (Faker $faker) {
-    return [
-        'order_id' => Order::inRandomOrder()->first(),
-        'item_id' => Item::inRandomOrder()->first(),
-        'quantity' => $faker->numberBetween(1, 5),
-        'price' => $faker->randomFloat(null, 5, 10)
-    ];
-});
+class OrderItemFactory extends Factory
+{
+    protected $model = OrderItem::class;
+
+    public function definition()
+    {
+        return [
+            'order_id' => $this->faker->numberBetween(1, Order::count()),
+            'item_id' => $this->faker->numberBetween(1, Item::count()),
+            'quantity' => $this->faker->numberBetween(1, 5),
+            'price' => $this->faker->randomFloat(null, 5, 10)
+        ];
+    }
+}
