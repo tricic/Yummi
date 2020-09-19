@@ -30,9 +30,6 @@ class OrderBuilderService
     /** @var bool */
     public $isValidDelivery = true;
 
-    /** @var bool */
-    public $isTotalPriceMatching = true;
-
     public function __construct(array $data = [])
     {
         $this->data = $data;
@@ -94,13 +91,7 @@ class OrderBuilderService
             ]));
         }
 
-        $total = $this->order->calculateTotalPrice(false);
-
-        if ($total !== floatval(@$cart->jsTotalPrice))
-        {
-            $this->isTotalPriceMatching = false;
-            $this->errors->push("Server calculated total price doesn't match the client calculated total price.");
-        }
+        $this->order->calculateTotalPrice(false);
     }
 
     public function hasErrors(): bool
