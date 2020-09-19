@@ -10,6 +10,11 @@ use Illuminate\View\View;
 
 class OrderController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->only('history');
+    }
+
     public function delivery(Request $request): View
     {
         return view('order.delivery', ['user' => $request->user()]);
@@ -26,9 +31,7 @@ class OrderController extends Controller
 
         $request->session()->put('order', serialize($orderBuilder->order));
 
-        return view('order.checkout', [
-            'order' => $orderBuilder->order
-        ]);
+        return view('order.checkout', ['order' => $orderBuilder->order]);
     }
 
     public function pay(Request $request, OrderBuilder $orderBuilder): RedirectResponse
@@ -73,13 +76,9 @@ class OrderController extends Controller
 
     public function history(Request $request): View
     {
-        abort_if(!$request->user(), 401);
-
         $orders = $request->user()->orders()->with('order_items.item')->orderBy('id', 'desc')->get();
 
-        return view('order.history', [
-            'orders' => $orders
-        ]);
+        return view('order.history', ['orders' => $orders]);
     }
 
     public function success(Order $order): View
