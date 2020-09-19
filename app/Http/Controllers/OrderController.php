@@ -22,6 +22,7 @@ class OrderController extends Controller
 
     public function checkout(Request $request, OrderBuilder $orderBuilder)
     {
+        $orderBuilder->data = $request->all();
         $orderBuilder->build();
 
         if ($orderBuilder->hasErrors())
