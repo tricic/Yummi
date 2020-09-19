@@ -37,41 +37,16 @@ class OrderController extends Controller
     public function pay(Request $request, OrderBuilder $orderBuilder): RedirectResponse
     {
         $order = unserialize($request->session()->get('order'));
-
         $orderBuilder->order = $order;
 
-        // Payment logic should go here...
-        // $payment->setAmount($order->total_price);
         // ...
-        // $paymentSuccess = $payment->process();
+        // Payment logic...
+        // ...
 
-        $paymentSuccess = true;
+        $orderBuilder->save();
+        $request->session()->remove('order');
 
-        if (!$paymentSuccess)
-        {
-            return redirect(null, 500)->route('order.failed');
-        }
-
-        try
-        {
-            $orderBuilder->save();
-
-            $request->session()->remove('order');
-
-            return redirect(null, 200)->route('order.success', $order);
-        }
-        catch (\Exception $e)
-        {
-            if (config('app.debug'))
-            {
-                throw $e;
-            }
-            else
-            {
-                // Refund payment here
-                return redirect(null, 500)->route('order.failed');
-            }
-        }
+        return redirect(null, 200)->route('order.success', $order);
     }
 
     public function history(Request $request): View
