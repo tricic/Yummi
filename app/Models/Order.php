@@ -12,7 +12,14 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $appends = ['vat_amount'];
+    protected $appends = [
+        'vat_amount'
+    ];
+
+    protected $casts = [
+        'delivery_fee' => 'float',
+        'total_price' => 'float'
+    ];
 
     protected $fillable = [
         'user_id', 'vat', 'delivery_fee', 'total_price', 'first_name', 'last_name', 'address', 'city', 'phone', 'notes'
