@@ -10,6 +10,11 @@ use Illuminate\View\View;
 
 class OrderController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->only('history');
+    }
+
     public function delivery(Request $request): View
     {
         return view('order.delivery', ['user' => $request->user()]);
@@ -17,6 +22,7 @@ class OrderController extends Controller
 
     public function checkout(Request $request, OrderBuilder $orderBuilder)
     {
+        $orderBuilder->data = $request->all();
         $orderBuilder->build();
 
         if ($orderBuilder->hasErrors())
@@ -26,60 +32,29 @@ class OrderController extends Controller
 
         $request->session()->put('order', serialize($orderBuilder->order));
 
-        return view('order.checkout', [
-            'order' => $orderBuilder->order
-        ]);
+        return view('order.checkout', ['order' => $orderBuilder->order]);
     }
 
     public function pay(Request $request, OrderBuilder $orderBuilder): RedirectResponse
     {
         $order = unserialize($request->session()->get('order'));
-
         $orderBuilder->order = $order;
 
-        // Payment logic should go here...
-        // $payment->setAmount($order->total_price);
         // ...
-        // $paymentSuccess = $payment->process();
+        // Payment logic...
+        // ...
 
-        $paymentSuccess = true;
+        $orderBuilder->save();
+        $request->session()->remove('order');
 
-        if (!$paymentSuccess)
-        {
-            return redirect(null, 500)->route('order.failed');
-        }
-
-        try
-        {
-            $orderBuilder->save();
-
-            $request->session()->remove('order');
-
-            return redirect(null, 200)->route('order.success', $order);
-        }
-        catch (\Exception $e)
-        {
-            if (config('app.debug'))
-            {
-                throw $e;
-            }
-            else
-            {
-                // Refund payment here
-                return redirect(null, 500)->route('order.failed');
-            }
-        }
+        return redirect(null, 200)->route('order.success', $order);
     }
 
     public function history(Request $request): View
     {
-        abort_if(!$request->user(), 401);
-
         $orders = $request->user()->orders()->with('order_items.item')->orderBy('id', 'desc')->get();
 
-        return view('order.history', [
-            'orders' => $orders
-        ]);
+        return view('order.history', ['orders' => $orders]);
     }
 
     public function success(Order $order): View

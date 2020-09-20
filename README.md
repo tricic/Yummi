@@ -39,7 +39,7 @@ npm install && npm run dev
 
 cp .env.example .env
 ```
-Edit **.env** file and **configure database** settings, then run
+Create database, edit **.env** file and **configure database** settings, then run
 
 
 ```bash
@@ -50,7 +50,14 @@ php artisan serve --port=8000
 That's it. Open [http://localhost:8000/](http://localhost:8000/) in your browser to run the application.
 
 ### Test
-PHPUnit testing to be added.
+Create new database (e.g. 'yummi_testing') and edit DB_DATABASE_TEST in **.env** file, then run
+```bash
+php artisan migrate --seed --database=mysql_testing
+```
+Now you can run tests with
+```bash
+php artisan test
+```
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)

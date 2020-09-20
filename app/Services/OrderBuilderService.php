@@ -6,48 +6,70 @@ use App\Events\OrderCreated;
 use App\Models\Item;
 use App\Models\Order;
 use App\Models\OrderItem;
-use Illuminate\Http\Request;
 
 class OrderBuilderService
 {
+    /** @var array */
+    public $data;
+
+    /** @var \Illuminate\Support\Collection */
+    public $errors;
+
+    /** @var \App\Models\Order */
     public $order;
 
-    public $errors;
-    public $request;
+    /** @var bool */
+    public $isValidCart = true;
 
-    public function __construct(Request $request)
+    /** @var bool */
+    public $isNotEmptyCart = true;
+
+    /** @var bool */
+    public $areValidItems  = true;
+
+    /** @var bool */
+    public $isValidDelivery = true;
+
+    public function __construct(array $data = [])
     {
-        $this->request = $request;
+        $this->data = $data;
         $this->errors = collect([]);
+    }
+
+    public static function make(...$args): OrderBuilderService
+    {
+        return new OrderBuilderService($args);
     }
 
     public function build(): void
     {
-        $cart = json_decode($this->request->cart);
+        $cart = json_decode($this->data['cart'] ?? '');
 
         if ($cart === null)
         {
-            $this->errors->push('Invalid request.');
+            $this->isValidCart = false;
+            $this->errors->push('Invalid cart JSON data.');
             return;
         }
 
         if (empty($cart->items))
         {
+            $this->isNotEmptyCart = false;
             $this->errors->push('Cart is empty.');
             return;
         }
 
-        $this->order = $order = new Order();
-        $order->user_id = $this->request->user()->id ?? null;
-        $order->delivery_fee = (float) env('DELIVERY_FEE');
-        $order->vat = (float) env('VAT');
+        $this->order = new Order();
+        $this->order->user_id      = auth()->user()->id ?? null;
+        $this->order->delivery_fee = floatval(env('DELIVERY_FEE'));
+        $this->order->vat          = floatval(env('VAT'));
 
-        $order->first_name = $this->request->first_name;
-        $order->last_name = $this->request->last_name;
-        $order->address = $this->request->address;
-        $order->city = $this->request->city;
-        $order->phone = $this->request->phone;
-        $order->notes = $this->request->notes;
+        $this->order->first_name = @$this->data['first_name'];
+        $this->order->last_name  = @$this->data['last_name'];
+        $this->order->address    = @$this->data['address'];
+        $this->order->city       = @$this->data['city'];
+        $this->order->phone      = @$this->data['phone'];
+        $this->order->notes      = @$this->data['notes'];
 
         $this->validateDeliveryInfo();
 
@@ -57,18 +79,24 @@ class OrderBuilderService
 
             if (empty($item))
             {
+                $this->areValidItems = false;
                 $this->errors->push("Menu item with ID $itemData->id not found. Please try re-populating your cart.");
                 break;
             }
 
-            $order->order_items->push(new OrderItem([
+            $this->order->order_items->push(new OrderItem([
                 'item_id' => $item->id,
                 'quantity' => $itemData->quantity,
                 'price' => $item->price
             ]));
         }
 
-        $order->calculateTotalPrice(false);
+        $this->order->calculateTotalPrice(false);
+    }
+
+    public function hasErrors(): bool
+    {
+        return $this->errors->isNotEmpty();
     }
 
     public function save(): void
@@ -84,17 +112,36 @@ class OrderBuilderService
         event(new OrderCreated($this->order));
     }
 
-    public function hasErrors(): bool
-    {
-        return $this->errors->isNotEmpty();
-    }
-
     protected function validateDeliveryInfo(): void
     {
-        if (empty($this->order->first_name)) $this->errors->push('First name must not be empty.');
-        if (empty($this->order->last_name))  $this->errors->push('Last name must not be empty.');
-        if (empty($this->order->address))    $this->errors->push('Address must not be empty.');
-        if (empty($this->order->city))       $this->errors->push('City must not be empty.');
-        if (empty($this->order->phone))      $this->errors->push('Phone number must not be empty.');
+        if (empty($this->order->first_name))
+        {
+            $this->isValidDelivery = false;
+            $this->errors->push('First name must not be empty.');
+        }
+
+        if (empty($this->order->last_name))
+        {
+            $this->isValidDelivery = false;
+            $this->errors->push('Last name must not be empty.');
+        }
+
+        if (empty($this->order->address))
+        {
+            $this->isValidDelivery = false;
+            $this->errors->push('Address must not be empty.');
+        }
+
+        if (empty($this->order->city))
+        {
+            $this->isValidDelivery = false;
+            $this->errors->push('City must not be empty.');
+        }
+
+        if (empty($this->order->phone))
+        {
+            $this->isValidDelivery = false;
+            $this->errors->push('Phone number must not be empty.');
+        }
     }
 }
