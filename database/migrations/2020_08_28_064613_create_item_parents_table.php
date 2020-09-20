@@ -18,7 +18,7 @@ class CreateItemParentsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unsignedBigInteger('category_id')->nullable();
+            $table->foreignId('category_id')->nullable();
             $table->string('name');
             $table->string('description')->nullable();
             $table->string('image')->nullable();
