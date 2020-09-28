@@ -12,7 +12,13 @@ class OrderItem extends Model
 
     public $timestamps = false;
 
-    protected $appends = ['total'];
+    protected $appends = [
+        'total'
+    ];
+
+    protected $casts = [
+        'price' => 'float'
+    ];
 
     protected $fillable = [
         'order_id', 'item_id', 'quantity', 'price'

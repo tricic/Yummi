@@ -108,8 +108,6 @@ class OrderBuilderService
             $orderItem->order_id = $this->order->id;
             $orderItem->save();
         }
-
-        event(new OrderCreated($this->order));
     }
 
     protected function validateDeliveryInfo(): void

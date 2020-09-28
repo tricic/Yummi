@@ -14,6 +14,10 @@ class Item extends Model
         'name'
     ];
 
+    protected $casts = [
+        'price' => 'float'
+    ];
+
     protected $fillable = [
         'item_parent_id', 'size', 'price'
     ];

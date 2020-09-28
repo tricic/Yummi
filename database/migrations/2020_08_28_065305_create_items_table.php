@@ -18,7 +18,7 @@ class CreateItemsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unsignedBigInteger('item_parent_id');
+            $table->foreignId('item_parent_id');
             $table->string('size');
             $table->decimal('price', 8, 2);
 

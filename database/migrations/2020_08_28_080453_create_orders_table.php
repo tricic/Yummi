@@ -17,7 +17,7 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->timestamps();
 
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreignId('user_id')->nullable();
             $table->integer('vat')->default(0);
             $table->decimal('delivery_fee', 8, 2)->default(0);
             $table->decimal('total_price', 8, 2)->default(0);
