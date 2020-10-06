@@ -7,7 +7,9 @@
     @csrf
     <input type="hidden" id="input-cart" name="cart">
     <script>
-        $("#input-cart").val(localStorage.getItem('cart'));
+        document.addEventListener('DOMContentLoaded', function(event) {
+            $('#input-cart').val(localStorage.getItem('cart'));
+        });
     </script>
 
     <div class="card-header">

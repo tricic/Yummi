@@ -98,25 +98,27 @@
     </div>
 </form>
 <script>
-fx.base = '{{ env('BASE_CURRENCY') }}';
-fx.rates = {
-    'EUR': {{ env('USD_EUR_EXCHANGE_RATE') }}
-};
+document.addEventListener('DOMContentLoaded', function(event) {
+    fx.base = '{{ env('BASE_CURRENCY') }}';
+    fx.rates = {
+        'EUR': {{ env('USD_EUR_EXCHANGE_RATE') }}
+    };
 
-$('#input-currency').on('change', function () {
-    let currency = $(this).val();
+    $('#input-currency').on('change', function () {
+        let currency = $(this).val();
 
-    if (['USD', 'EUR'].includes(currency) == false)
-    {
-        return console.log('ERR: Unsupported currency.');
-    }
+        if (['USD', 'EUR'].includes(currency) == false)
+        {
+            return console.log('ERR: Unsupported currency.');
+        }
 
-    $('.price').each(function () {
-        let usd = parseFloat($(this).data('usd'));
-        let convertedPrice = fx(usd).from('USD').to(currency);
+        $('.price').each(function () {
+            let usd = parseFloat($(this).data('usd'));
+            let convertedPrice = fx(usd).from('USD').to(currency);
 
-        $(this).text(convertedPrice.toFixed(2));
-        $('.currency').text(currency);
+            $(this).text(convertedPrice.toFixed(2));
+            $('.currency').text(currency);
+        });
     });
 });
 </script>
