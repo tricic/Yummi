@@ -79,44 +79,60 @@
                 <hr class="my-2">
 
                 <div class="h5 mb-0">
+
                     Total:
                     <span class="price" data-usd="{{ $order->total_price }}">
                         {{ number_format($order->total_price, 2) }}
                     </span>
-                    <span class="currency">USD</span>
+                    {{-- <span class="currency">USD</span> --}}
+                    <select name="currency" id="input-currency" class="form-control d-inline-block pr-5" style="width: auto;">
+                        <option>USD</option>
+                        <option>EUR</option>
+                    </select>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="card-footer text-right">
-        <select name="currency" id="input-currency" class="form-control d-inline-block pr-5" style="width: auto;">
-            <option>USD</option>
-            <option>EUR</option>
-        </select>
-        <button type="submit" class="btn btn-primary px-5 ml-3">Pay order</button>
+    <div class="card-footer text-right font-weight-bold">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="payment_type" id="inlineRadio1" value="cash" checked>
+            <label class="form-check-label" for="inlineRadio1">Cash on Delivery</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="payment_type" id="inlineRadio2" value="paypal" disabled>
+            <label class="form-check-label" for="inlineRadio2">PayPal</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="payment_type" id="inlineRadio3" value="stripe" disabled>
+            <label class="form-check-label" for="inlineRadio3">Stripe</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary px-5 ml-3">PROCEED</button>
     </div>
 </form>
 <script>
-fx.base = '{{ env('BASE_CURRENCY') }}';
-fx.rates = {
-    'EUR': {{ env('USD_EUR_EXCHANGE_RATE') }}
-};
+document.addEventListener('DOMContentLoaded', function(event) {
+    fx.base = '{{ env('BASE_CURRENCY') }}';
+    fx.rates = {
+        'EUR': {{ env('USD_EUR_EXCHANGE_RATE') }}
+    };
 
-$('#input-currency').on('change', function () {
-    let currency = $(this).val();
+    $('#input-currency').on('change', function () {
+        let currency = $(this).val();
 
-    if (['USD', 'EUR'].includes(currency) == false)
-    {
-        return console.log('ERR: Unsupported currency.');
-    }
+        if (['USD', 'EUR'].includes(currency) == false)
+        {
+            return console.log('ERR: Unsupported currency.');
+        }
 
-    $('.price').each(function () {
-        let usd = parseFloat($(this).data('usd'));
-        let convertedPrice = fx(usd).from('USD').to(currency);
+        $('.price').each(function () {
+            let usd = parseFloat($(this).data('usd'));
+            let convertedPrice = fx(usd).from('USD').to(currency);
 
-        $(this).text(convertedPrice.toFixed(2));
-        $('.currency').text(currency);
+            $(this).text(convertedPrice.toFixed(2));
+            $('.currency').text(currency);
+        });
     });
 });
 </script>

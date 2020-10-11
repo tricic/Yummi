@@ -14,7 +14,7 @@
             @foreach ($items as $item)
                 <div class="ml-lg-3">
                     <span class="menu-item-size">{{ $item->size }}</span>
-                    <button onclick='cart.addItem(@JSON($item))' class="menu-item-btn btn btn-sm btn-outline-primary py-0">
+                    <button @click='addToCart(@JSON($item))' class="menu-item-btn btn btn-sm btn-outline-primary py-0">
                         <b class="menu-item-price">{{ $item->price }}</b>
                         <i class="fas fa-plus-circle"></i>
                     </button>

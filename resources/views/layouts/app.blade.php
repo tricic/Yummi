@@ -9,30 +9,32 @@
 
     <title>Yummi - @yield('title')</title>
 
-    @include('shared.head.bootstrap')
-    @include('shared.head.fontawesome')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha512-MoRNloxbStBcD8z3M/2BmnT+rg4IsMxPkXaGh2zD6LGNNFE80W3onsAhRcMAMrSoyWL9xD7Ert0men7vR8LUZg==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
 
     @stack('scripts')
 
     {{-- app.js --}}
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script defer src="{{ asset('js/app.js') }}"></script>
 
     <!-- app.css -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-    <header>
-        @include('shared.nav')
-    </header>
+    <div id="app">
+        <header>
+            @include('shared.nav')
+        </header>
 
-    <x-alerts class="container my-4" />
+        <x-alerts class="container my-4" />
 
-    <main class="container py-4">
-        @yield('content')
-    </main>
+        <main class="container py-4">
+            @yield('content')
+        </main>
 
-    <footer class="py-4 border-top">
-        @include('shared.footer')
-    </footer>
+        <footer class="py-4 border-top">
+            @include('shared.footer')
+        </footer>
+    </div>
 </body>
 </html>
