@@ -79,22 +79,36 @@
                 <hr class="my-2">
 
                 <div class="h5 mb-0">
+
                     Total:
                     <span class="price" data-usd="{{ $order->total_price }}">
                         {{ number_format($order->total_price, 2) }}
                     </span>
-                    <span class="currency">USD</span>
+                    {{-- <span class="currency">USD</span> --}}
+                    <select name="currency" id="input-currency" class="form-control d-inline-block pr-5" style="width: auto;">
+                        <option>USD</option>
+                        <option>EUR</option>
+                    </select>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="card-footer text-right">
-        <select name="currency" id="input-currency" class="form-control d-inline-block pr-5" style="width: auto;">
-            <option>USD</option>
-            <option>EUR</option>
-        </select>
-        <button type="submit" class="btn btn-primary px-5 ml-3">Pay order</button>
+    <div class="card-footer text-right font-weight-bold">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="payment_type" id="inlineRadio1" value="cash" checked>
+            <label class="form-check-label" for="inlineRadio1">Cash on Delivery</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="payment_type" id="inlineRadio2" value="paypal" disabled>
+            <label class="form-check-label" for="inlineRadio2">PayPal</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="payment_type" id="inlineRadio3" value="stripe" disabled>
+            <label class="form-check-label" for="inlineRadio3">Stripe</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary px-5 ml-3">PROCEED</button>
     </div>
 </form>
 <script>
