@@ -18,6 +18,7 @@ Test user: email: test@mail.net | password: password
 
 ## Technologies used
 - [Laravel 8](https://laravel.com/docs/8.x/installation)
+- [Vue 2](https://vuejs.org/v2/guide/)
 - [jQuery](https://jquery.com/)
 - [Bootstrap 4](https://getbootstrap.com/)
 - More: [Fontawesome](https://fontawesome.com/), [Bootbox.js](http://bootboxjs.com/), [money.js](http://openexchangerates.github.io/money.js/)
