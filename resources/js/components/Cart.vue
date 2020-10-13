@@ -21,7 +21,7 @@
         </div>
 
         <div class="card-footer">
-            <a href="order/delivery" class="cart-checkout-button btn btn-primary form-control" :class="{ disabled: isEmpty }">Checkout</a>
+            <a href="/order/delivery" class="cart-checkout-button btn btn-primary form-control" :class="{ disabled: isEmpty }">Checkout</a>
         </div>
     </div>
 </template>
